@@ -1,6 +1,6 @@
 {
   "name": "@pipeworx/mcp-nist-standards",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "NIST Standards MCP pack",
   "type": "module",
   "main": "src/index.ts",
@@ -26,7 +26,7 @@
     "@cloudflare/workers-types": "^4.20260405.1"
   },
   "pipeworx": {
-    "sourceHash": "v1-660e01daaa6fa88b7be5f51e45d04cc44999db4e66a5bd6101bb0dfeafd77159",
-    "sourceCommit": "adb69d997f82a62e8e22b594488c7d04a227db35"
+    "sourceHash": "v1-8577294c0ddaecd9916175bfbd1632fa315613d8d07528b3fc5fa7717e3847d6",
+    "sourceCommit": "514e3efb42b8d81082c07e01d3ae7654bbf91f52"
   }
 }

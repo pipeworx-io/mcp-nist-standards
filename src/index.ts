@@ -34,7 +34,20 @@ interface McpToolExport {
  * network access at runtime.
  */
 
-import { CONTROLS, type NistControl } from './catalog';
+import type { NistControl } from './catalog';
+
+// fleet #3286: catalog.ts is a ~1.25MB generated array literal (1,326
+// controls). It used to be a static VALUE import, which put the whole table
+// into every gateway isolate's bundle whether or not that isolate ever
+// served this pack (fleet #2754's rule). It is now loaded from KV on this
+// pack's first call and injected as `args._bakedIndex` — see
+// workers/gateway/src/pack-baked-indexes.json and pack-static-blobs.ts.
+//
+// NEVER value-import './catalog' here again — a type-only import is erased
+// by the bundler, a value import puts the whole table back into every
+// isolate and the deploy workflow's bundle-size ceiling fails the deploy.
+let CONTROLS: NistControl[] = [];
+let BY_ID = new Map<string, NistControl>();
 
 // ---- id normalization -------------------------------------------------------
 // Build a lookup keyed by a canonical form so we can accept forgiving inputs:
@@ -51,8 +64,26 @@ function canonical(id: string): string {
   return s;
 }
 
-const BY_ID = new Map<string, NistControl>();
-for (const c of CONTROLS) BY_ID.set(canonical(c.id), c);
+/**
+ * Populate CONTROLS/BY_ID from `args._bakedIndex` on this isolate's first
+ * call into the pack. Memoized for the isolate's life (CONTROLS.length
+ * guards it); loud on a missing/malformed index — answering from an empty
+ * catalog would read as "no such control", a silent wrong answer.
+ */
+function ensureIndex(args: Record<string, unknown>): void {
+  if (CONTROLS.length) return;
+  const idx = args._bakedIndex as Record<string, unknown> | null | undefined;
+  const controls = idx?.CONTROLS;
+  if (!Array.isArray(controls) || controls.length === 0) {
+    throw new Error(
+      `nist-standards: the baked control catalog is unavailable (${idx == null ? 'not injected' : 'malformed'}). ` +
+        'The gateway loads it from KV on the first call into this pack; this is a server-side fault, not a bad control id — retry shortly.',
+    );
+  }
+  CONTROLS = controls as NistControl[];
+  BY_ID = new Map();
+  for (const c of CONTROLS) BY_ID.set(canonical(c.id), c);
+}
 
 function familyMatch(input: string): (c: NistControl) => boolean {
   const q = input.trim().toUpperCase();
@@ -116,6 +147,7 @@ const tools: McpToolExport['tools'] = [
 ];
 
 async function callTool(name: string, args: Record<string, unknown>): Promise<unknown> {
+  ensureIndex(args);
   switch (name) {
     case 'nist_control': {
       const rawId = String(args.id ?? '').trim();
