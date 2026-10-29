@@ -1,12 +1,20 @@
 {
   "name": "@pipeworx/mcp-nist-standards",
-  "version": "0.1.3",
+  "version": "0.2.0",
   "description": "NIST Standards MCP pack",
   "type": "module",
-  "main": "src/index.ts",
-  "types": "src/index.ts",
+  "main": "lib/index.js",
+  "exports": {
+    ".": "./lib/index.js",
+    "./tools.json": "./tools.json",
+    "./package.json": "./package.json"
+  },
   "bin": {
     "mcp-nist-standards": "bin/cli.js"
+  },
+  "files": ["bin/", "lib/", "tools.json", "server.json"],
+  "engines": {
+    "node": ">=18"
   },
   "keywords": ["mcp", "mcp-server", "model-context-protocol", "pipeworx", "nist-standards"],
   "license": "MIT",
@@ -14,19 +22,12 @@
     "type": "git",
     "url": "git+https://github.com/pipeworx-io/mcp-nist-standards.git"
   },
-  "scripts": {
-    "typecheck": "tsc --noEmit"
-  },
-  "dependencies": {
-    "@modelcontextprotocol/sdk": "^1.30.0",
-    "tsx": "^4.19.0"
-  },
-  "devDependencies": {
-    "typescript": "^5.9.3",
-    "@cloudflare/workers-types": "^4.20260405.1"
-  },
+  "mcpName": "io.github.pipeworx-io/nist-standards",
   "pipeworx": {
-    "sourceHash": "v1-7e3f47f62ea1e87cec34d644ed3ceadb3053945bd29ad86d9899b604d0a70b0a",
-    "sourceCommit": "774de7f685a75e02d0b828d24a7b94794102152c"
+    "mode": "gateway",
+    "slug": "nist-standards",
+    "gatewaySlug": "nist-standards",
+    "sourceHash": "v1-eab9b24c3be7ecbae33155f1808665f721cc6f3f9b8b95d4aa507126303ece2f",
+    "sourceCommit": "5c89d6abb778d45da5d92002eb251978622bedf9"
   }
 }
