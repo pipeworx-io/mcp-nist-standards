@@ -1,6 +1,6 @@
 {
   "name": "@pipeworx/mcp-nist-standards",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "NIST Standards MCP pack",
   "type": "module",
   "main": "lib/index.js",
@@ -27,7 +27,7 @@
     "mode": "gateway",
     "slug": "nist-standards",
     "gatewaySlug": "nist-standards",
-    "sourceHash": "v1-eab9b24c3be7ecbae33155f1808665f721cc6f3f9b8b95d4aa507126303ece2f",
-    "sourceCommit": "5c89d6abb778d45da5d92002eb251978622bedf9"
+    "sourceHash": "v1-aaa6d436546e7ce5876c39ba6c16274dad645d3579d7d10ac7e08a03d6fab2ce",
+    "sourceCommit": "bed7faa04e7276899b5e3870ef11c98625371f2b"
   }
 }
